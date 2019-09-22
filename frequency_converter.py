@@ -19,3 +19,17 @@
 # EndOfTrackEvent - special event that indicates to MIDI the end of a track, has tick 
 # value of 1
 
+import mido
+
+def frequencyToNote(tickValue, loudnessValue, freqValue) :
+	print("this function is run")
+	track = midi.Track()
+	on = midi.NoteOnEvent(0, loudnessValue, freqValue)
+	off = midi.NoteOffEvent(tickValue, 0, freqValue)
+	end = midi.EndOfTrackEvent()
+	track.append(on)
+	track.append(off)
+	track.append(end)
+
+
+frequencyToNote(120, 10, 10)
