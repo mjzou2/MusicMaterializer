@@ -25,10 +25,7 @@ def loudest_freqs(wav_file):
     return louds
 
 def analyse_wavs(wavs):
-    freqs = []
-    for wav in wavs:
-        freqs.append(loudest_freqs(wav))
-    return freqs
+    return [loudest_freqs(wav) for wav in wavs]
 
 # https://www.johndcook.com/blog/2016/02/10/musical-pitch-notation/
 def pitch(freq):
