@@ -1,16 +1,16 @@
 import midi
 import frequency_to_notes
 
-    
 class ConvertToMidi:
     noteName = []
     bpm = []
     constVelocity = 30
-    timeInt = 240
+    timeInt = 1
 
     # constructor
     def __init__(self, notes, tempo):
         print("constructing...")
+       
         self.noteName = notes
         for i in range(len(self.noteName)):
             for j in range (len(self.noteName[i])):
@@ -21,13 +21,13 @@ class ConvertToMidi:
     # convert notes and output the midi file
     def toMidi(self):
         print("called toMidi")
-        print(self.noteName)
-        print(self.bpm)
+        
         # create midi pattern and track
         pattern = midi.Pattern()
         track = midi.Track()
         pattern.append(track)
-
+        
+        # append note events to the track
         print("start appending note events")
         for i in range(len(self.noteName)):
             for j in range(len(self.noteName[i])):
@@ -42,17 +42,19 @@ class ConvertToMidi:
 
                 track.append(off)
 
+        # create eot
         print("creating eot...")
         eot = midi.EndOfTrackEvent(tick = 1)
         track.append(eot)
 
         print ("This is the pattern")
         print (pattern)
-
+        
+        # save the pattern to ./output.mid
         print ("Saving ...")
         midi.write_midifile("output.mid", pattern)
 
-        print ("Finished")
+        print ("Conversion finished")
 
 """
 print ("running test")
@@ -65,5 +67,5 @@ print(frequency_to_notes.frequencyToNote([[440,220],[329.628,493.883]]))
 test = ConvertToMidi(frequency_to_notes.frequencyToNote([[440,220],[329.628,493.883]]), 90)
 test.toMidi()
 
-print("finished")
+print("Test finished")
 """
