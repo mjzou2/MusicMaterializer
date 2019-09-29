@@ -1,6 +1,16 @@
 import midi
-import frequency_to_notes
+from audiolazy import freq2midi, freq2str, str2freq
 
+# convert frequencies into Midi numbers
+def frequencyToNote(frequencies):
+    tempList = frequencies.copy()
+	
+    for i in range(len(frequencies)):
+    	tempList[i] = freq2midi(frequencies[i])
+
+    return tempList
+
+# convert the list of Midi numbers into a functional midi file
 class ConvertToMidi:
     noteName = []
     bpm = []
@@ -63,8 +73,8 @@ print ("running test")
 notes = [[31, 57], [69], [48, 38]]
 print (notes)
 
-print(frequency_to_notes.frequencyToNote([[440,220],[329.628,493.883]]))
-test = ConvertToMidi(frequency_to_notes.frequencyToNote([[440,220],[329.628,493.883]]), 90)
+print(frequencyToNote([[440,220],[329.628,493.883]]))
+test = ConvertToMidi(frequencyToNote([[440,220],[329.628,493.883]]), 90)
 test.toMidi()
 
 print("Test finished")
