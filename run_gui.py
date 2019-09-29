@@ -39,12 +39,19 @@ class MusicMaterializerGUI(tk.Frame):
         self.run_button = ttk.Button(self)
         self.run_button['command'] = self.run_analysis
         self.run_button['text'] = "Run Analyses"
-        self.run_button.grid(row=2)
+        self.run_button.grid(row=3)
+
+        self.bpm_detector_var = tk.IntVar()
+        self.bpm_detector = ttk.Checkbutton(self)
+        self.bpm_detector['text'] ="Automatically Detect BPM?"
+        self.bpm_detector['variable'] = self.bpm_detector_var
+        self.bpm_detector.grid(row=2)
 
 
     def run_analysis(self):
         print(self.tempo_var.get())
         print(self.audio_file_var.get())
+        pritn(self.bpm_detector_var.get())
 
 root = tk.Tk()
 app = MusicMaterializerGUI(master=root)
