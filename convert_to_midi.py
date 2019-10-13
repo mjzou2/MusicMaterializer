@@ -15,7 +15,7 @@ class ConvertToMidi:
     noteName = []
     bpm = []
     constVelocity = 30
-    timeInt = 1
+    resolution = 240
 
     # constructor
     def __init__(self, notes, tempo):
@@ -46,7 +46,7 @@ class ConvertToMidi:
 
             for k in range(len(self.noteName[i])):
                 if k == 0:
-                    off = midi.NoteOffEvent(tick = self.timeInt, pitch = self.noteName[i][k])
+                    off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k])
                 else:
                     off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k])
 
