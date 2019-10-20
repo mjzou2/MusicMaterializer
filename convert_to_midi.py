@@ -10,10 +10,14 @@ def frequencyToNote(frequencies):
             tempList[i] = []
         else:
             tempList[i] = freq2midi(frequencies[i])
-            for j in range(len(frequencies[i])):
+            j = 0
+            k = 0
+            while j < len(frequencies[i]) - k:
                 if tempList[i][j] < 0 or tempList[i][j] >= 256:
-                    tempList[i].remove(tempList[i][j]) 
-    
+                    tempList[i].remove(tempList[i][j])
+                    j = 0
+                    k += 1
+                j += 1 
     print(tempList)
     return tempList
 
@@ -92,7 +96,7 @@ print ("running test")
 
 #print(frequencyToNote([[440,220],[329.628,493.883]]))
 
-test = ConvertToMidi([[392.0,1.3333333333333],[440.0,1.333333333],[494.6666666,1.3333333333333],[522.6666666666666666666666,1.333333333], None, None, [440.0], None, None], 90)
+test = ConvertToMidi([[392.0,1.3333333333333,440],[440.0,1.333333333,16.35],[494.6666666,1.3333333333333],[522.6666666666666666666666,1.333333333], None, None, [440.0], None, None], 90)
 test.toMidi()
 
 print("Test finished")
