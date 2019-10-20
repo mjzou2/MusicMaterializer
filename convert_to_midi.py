@@ -13,21 +13,22 @@ def frequencyToNote(frequencies):
 # convert the list of Midi numbers into a functional midi file
 class ConvertToMidi:
     noteName = []
-    bpm = []
+    bpm = 120
     constVelocity = 30
     resolution = 240
 
     # constructor
     def __init__(self, notes, tempo):
         print("constructing...")
-       
-        self.noteName = notes
+        
+        self.noteName = frequencyToNote(notes)
+        
         for i in range(len(self.noteName)):
             for j in range (len(self.noteName[i])):
-                self.noteName[i][j] = round(self.noteName[i][j])
-
+               self.noteName[i][j] = round(self.noteName[i][j])
+        
         self.bpm = tempo
-                
+      
     # convert notes and output the midi file
     def toMidi(self):
         print("called toMidi")
@@ -39,8 +40,9 @@ class ConvertToMidi:
         
         # append note events to the track
         print("start appending note events")
-        bpm = midi.SetTempoEvent(tempo, resolution)
-        track.append(bpm)
+        tempo = midi.SetTempoEvent()
+        tempo.set_bpm(self.bpm)
+        track.append(tempo)
 
         for i in range(len(self.noteName)):
             for j in range(len(self.noteName[i])):
@@ -69,15 +71,17 @@ class ConvertToMidi:
 
         print ("Conversion finished")
 
-
+'''
 print ("running test")
 
 
 notes = [[31, 57], [69], [48, 38]]
-print (notes)
+
 
 print(frequencyToNote([[440,220],[329.628,493.883]]))
-test = ConvertToMidi(frequencyToNote([[440,220],[329.628,493.883]]), 90)
+
+test = ConvertToMidi([[440,220],[329.628,493.883]], 90)
 test.toMidi()
 
 print("Test finished")
+'''
