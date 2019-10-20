@@ -88,7 +88,7 @@ class ConvertToMidi:
 
         print ("Conversion finished")
 
-
+'''
 print ("running test")
 
 
@@ -100,6 +100,6 @@ test = ConvertToMidi([[392.0,1.3333333333333,440],[440.0,1.333333333,16.35],[494
 test.toMidi()
 
 print("Test finished")
-'''
+
 print(frequencyToNote([[1.4444],[440],[494.66666],[522.6666666666, 1.33333333]]))
 '''
