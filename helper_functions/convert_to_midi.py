@@ -1,14 +1,15 @@
 import midi
-from audiolazy import freq2midi, freq2str, str2freq
+import audiolazy
+from audiolazy import lazy_midi
 
 # convert frequencies into Midi numbers
 def frequencyToNote(frequencies):
     tempList = frequencies.copy()
-	
     for i in range(len(frequencies)):
-    	tempList[i] = freq2midi(frequencies[i])
+        tempList[i] = lazy_midi.freq2midi(frequencies[i])
 
     return tempList
+
 
 # convert the list of Midi numbers into a functional midi file
 class ConvertToMidi:
@@ -18,14 +19,14 @@ class ConvertToMidi:
     resolution = 240
 
     # constructor
-    def __init__(self, notes, tempo):
+    def __init__(self, notes, tempo, export):
         print("constructing...")
        
         self.noteName = notes
         for i in range(len(self.noteName)):
             for j in range (len(self.noteName[i])):
                 self.noteName[i][j] = round(self.noteName[i][j])
-
+        self.export = export
         self.bpm = tempo
                 
     # convert notes and output the midi file
@@ -62,7 +63,7 @@ class ConvertToMidi:
         
         # save the pattern to ./output.mid
         print ("Saving ...")
-        midi.write_midifile("output.mid", pattern)
+        midi.write_midifile(self.export, pattern)
 
         print ("Conversion finished")
 
