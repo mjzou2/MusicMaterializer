@@ -32,7 +32,7 @@ class ConvertToMidi:
     # convert notes and output the midi file
     def toMidi(self):
         print("called toMidi")
-        
+        print(self.noteName)
         # create midi pattern and track
         pattern = midi.Pattern()
         track = midi.Track()
@@ -77,10 +77,9 @@ print ("running test")
 
 notes = [[31, 57], [69], [48, 38]]
 
-
 print(frequencyToNote([[440,220],[329.628,493.883]]))
 
-test = ConvertToMidi([[440,220],[329.628,493.883]], 90)
+test = ConvertToMidi([[392.0],[440.0],[494.6666666],[522.6666666666666666666666]], 90)
 test.toMidi()
 
 print("Test finished")
