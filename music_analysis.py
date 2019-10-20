@@ -4,7 +4,7 @@ import numpy as np
 from math import log2, pow
 
 def loudest_freqs(wav_file):
-    min_amp = 100_000_000 #i have no idea what this should be set to
+    min_amp = 100000000 #i have no idea what this should be set to
     samplerate, data = wavfile.read(wav_file)
     samples = len(data)
     if data.ndim > 1: #if two (plus?) channels
@@ -20,7 +20,7 @@ def loudest_freqs(wav_file):
             if p not in pitches_recorded:
                 pitches_recorded.append(p)
                 louds.append(freqs[i])
-    if louds == []:
+    if not loud:
         return None
     return louds
 

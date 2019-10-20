@@ -1,0 +1,6 @@
+matplotlib==2.2.4
+scipy==1.2.2
+numpy==1.16.5
+audiolazy==0.6
+midi==0.2.3
+pywt==1.0.6
