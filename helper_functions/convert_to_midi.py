@@ -4,11 +4,15 @@ from audiolazy import lazy_midi
 
 # convert frequencies into Midi numbers
 def frequencyToNote(frequencies):
-    tempList = frequencies.copy()
+    temp_list = []
     for i in range(len(frequencies)):
-        tempList[i] = lazy_midi.freq2midi(frequencies[i])
+        temp = int(lazy_midi.freq2midi(frequencies[i]))
+        if 0 <= temp <= 255:
+            temp_list.append(temp)
 
-    return tempList
+
+
+    return temp_list
 
 
 # convert the list of Midi numbers into a functional midi file
@@ -24,11 +28,15 @@ class ConvertToMidi:
        
         self.noteName = notes
         for i in range(len(self.noteName)):
-            for j in range (len(self.noteName[i])):
-                self.noteName[i][j] = round(self.noteName[i][j])
+            if self.noteName[i] is None:
+                self.noteName[i] = []
+            for j in range(len(self.noteName[i])):
+                self.noteName[i][j] = int(self.noteName[i][j])
+            self.noteName[i] = frequencyToNote(self.noteName[i])
         self.export = export
         self.bpm = tempo
-                
+        print(self.noteName)
+
     # convert notes and output the midi file
     def toMidi(self):
         print("called toMidi")
@@ -37,7 +45,7 @@ class ConvertToMidi:
         pattern = midi.Pattern()
         track = midi.Track()
         pattern.append(track)
-        
+
         # append note events to the track
         print("start appending note events")
         for i in range(len(self.noteName)):
@@ -50,7 +58,6 @@ class ConvertToMidi:
                     off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k])
                 else:
                     off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k])
-
                 track.append(off)
 
         # create eot
