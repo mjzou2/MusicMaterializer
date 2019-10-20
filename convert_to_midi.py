@@ -6,7 +6,7 @@ def frequencyToNote(frequencies):
     tempList = frequencies.copy()
 	
     for i in range(len(frequencies)):
-    	tempList[i] = freq2midi(frequencies[i])
+        tempList[i] = freq2midi(frequencies[i])
 
     return tempList
 
@@ -46,14 +46,14 @@ class ConvertToMidi:
 
         for i in range(len(self.noteName)):
             for j in range(len(self.noteName[i])):
-                on = midi.NoteOnEvent(tick = 0, velocity = self.constVelocity, pitch = self.noteName[i][j])
+                on = midi.NoteOnEvent(tick = 0, velocity = self.constVelocity, pitch = self.noteName[i][j] - 12)
                 track.append(on)
 
             for k in range(len(self.noteName[i])):
                 if k == 0:
-                    off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k])
+                    off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k] - 12)
                 else:
-                    off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k])
+                    off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k] - 12)
 
                 track.append(off)
 
@@ -78,9 +78,8 @@ print ("running test")
 notes = [[31, 57], [69], [48, 38]]
 
 print(frequencyToNote([[440,220],[329.628,493.883]]))
-
+'''
 test = ConvertToMidi([[392.0],[440.0],[494.6666666],[522.6666666666666666666666]], 90)
 test.toMidi()
 
 print("Test finished")
-'''
