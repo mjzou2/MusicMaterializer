@@ -6,9 +6,9 @@ from audiolazy import lazy_midi
 def frequencyToNote(frequencies):
     temp_list = []
     for i in range(len(frequencies)):
-        temp = int(lazy_midi.freq2midi(frequencies[i]))
-        if 0 <= temp <= 255:
-            temp_list.append(temp)
+        temp = lazy_midi.freq2midi(frequencies[i])
+        if 0 <= temp - 12 <= 255:
+            temp_list.append(temp - 12)
 
 
 
@@ -30,12 +30,11 @@ class ConvertToMidi:
         for i in range(len(self.noteName)):
             if self.noteName[i] is None:
                 self.noteName[i] = []
-            for j in range(len(self.noteName[i])):
-                self.noteName[i][j] = int(self.noteName[i][j])
             self.noteName[i] = frequencyToNote(self.noteName[i])
+            for j in range(len(self.noteName[i])):
+                self.noteName[i][j] = round(self.noteName[i][j])
         self.export = export
         self.bpm = tempo
-        print(self.noteName)
 
     # convert notes and output the midi file
     def toMidi(self):
@@ -48,6 +47,10 @@ class ConvertToMidi:
 
         # append note events to the track
         print("start appending note events")
+        tempo = midi.SetTempoEvent()
+        tempo.set_bpm(self.bpm)
+        track.append(tempo)
+
         for i in range(len(self.noteName)):
             for j in range(len(self.noteName[i])):
                 on = midi.NoteOnEvent(tick = 0, velocity = self.constVelocity, pitch = self.noteName[i][j])
