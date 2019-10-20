@@ -48,22 +48,22 @@ class ConvertToMidi:
         tempo.set_bpm(self.bpm)
         track.append(tempo)
         
-        rest = 1
+        rest = 0
         for i in range(len(self.noteName)):
             
             if self.noteName[i] == None:
                 self.rest += 1
             else:
-                self.rest = 1
+                self.rest = 0
 
             for j in range(len(self.noteName[i])):
-                on = midi.NoteOnEvent(tick = 0, velocity = self.constVelocity, pitch = self.noteName[i][j] - 12)
+                on = midi.NoteOnEvent(tick = 0 + self.rest * self.resolution, velocity = self.constVelocity, pitch = self.noteName[i][j] - 12)
                 track.append(on)
 
             for k in range(len(self.noteName[i])):
                 
                 if k == 0:
-                    off = midi.NoteOffEvent(tick = self.rest * self.resolution, pitch = self.noteName[i][k] - 12)
+                    off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k] - 12)
                 else:
                     off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k] - 12)
 
