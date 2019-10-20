@@ -10,7 +10,9 @@ def frequencyToNote(frequencies):
             tempList[i] = []
         else:
             tempList[i] = freq2midi(frequencies[i])
-    
+            for j in range(len(frequencies[i])):
+                if tempList[i][j] < 0 or tempList[i][j] >= 256:
+                    tempList[i].remove(tempList[i][j]) 
     
     print(tempList)
     return tempList
@@ -56,19 +58,17 @@ class ConvertToMidi:
                 rest += 1
 
             for j in range(len(self.noteName[i])):
-                if self.noteName[i][j] >= 0 and self.noteName[i][j] < 128:
-                    on = midi.NoteOnEvent(tick = 0 + (rest * self.resolution), velocity = self.constVelocity, pitch = self.noteName[i][j] - 12)
-                    track.append(on)
-                    rest = 0
+                on = midi.NoteOnEvent(tick = 0 + (rest * self.resolution), velocity = self.constVelocity, pitch = self.noteName[i][j] - 12)
+                track.append(on)
+                rest = 0
 
             for k in range(len(self.noteName[i])):
-                if self.noteName[i][j] >= 0 and self.noteName[i][j] < 128:
-                    if k == 0:
-                        off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k] - 12)
-                    else:
-                        off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k] - 12)
+                if k == 0:
+                    off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k] - 12)
+                else:
+                    off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k] - 12)
 
-                    track.append(off)
+                track.append(off)
 
         # create eot
         print("creating eot...")
