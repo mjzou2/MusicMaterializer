@@ -42,7 +42,7 @@ def loudest_freqs(wav_file):
         othwerise returns list of unique frequencies as floats.
     """
 
-    min_amp = 100000000
+    min_amp = 10000000
     samplerate, data = wavfile.read(wav_file)
     samples = len(data)
     if data.ndim > 1:
@@ -106,7 +106,6 @@ if __name__ == "__main__":
     input = args.wav_file
     output = args.export
     num_of_chunks, wavs = split(input, bpm)
-    wavs = []
     # wavs = ["/temp/chunk%s.wav" % i for i in range(num_of_chunks)]
     freqs = analyse_wavs(wavs)
     converter = convert_to_midi.ConvertToMidi(freqs, bpm, output)
