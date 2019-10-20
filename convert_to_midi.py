@@ -51,17 +51,17 @@ class ConvertToMidi:
         rest = 0
         for i in range(len(self.noteName)):
             
-            if self.noteName[i] == None:
-                self.rest += 1
-            else:
-                self.rest = 0
+            if self.noteName[i] == []:
+                rest += 1
 
             for j in range(len(self.noteName[i])):
-                on = midi.NoteOnEvent(tick = 0 + self.rest * self.resolution, velocity = self.constVelocity, pitch = self.noteName[i][j] - 12)
+                print(rest)
+                on = midi.NoteOnEvent(tick = 0 + (rest * self.resolution), velocity = self.constVelocity, pitch = self.noteName[i][j] - 12)
                 track.append(on)
 
             for k in range(len(self.noteName[i])):
-                
+                rest = 0
+                print('Note off')
                 if k == 0:
                     off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k] - 12)
                 else:
