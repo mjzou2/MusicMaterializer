@@ -39,6 +39,9 @@ class ConvertToMidi:
         
         # append note events to the track
         print("start appending note events")
+        bpm = midi.SetTempoEvent(tempo, resolution)
+        track.append(bpm)
+
         for i in range(len(self.noteName)):
             for j in range(len(self.noteName[i])):
                 on = midi.NoteOnEvent(tick = 0, velocity = self.constVelocity, pitch = self.noteName[i][j])
@@ -66,7 +69,7 @@ class ConvertToMidi:
 
         print ("Conversion finished")
 
-"""
+
 print ("running test")
 
 
@@ -78,4 +81,3 @@ test = ConvertToMidi(frequencyToNote([[440,220],[329.628,493.883]]), 90)
 test.toMidi()
 
 print("Test finished")
-"""
