@@ -2,6 +2,12 @@ import wave, array, math, time, argparse, sys
 from scipy.io import wavfile
 from scipy.fftpack import fft, fftfreq
 import midi
+import pydub
+import os
+import errno
+import convert_to_midi
+
+
 
 def loudest_freqs(wav_file):
     """
@@ -56,6 +62,27 @@ def freq_to_str(freq):
     n = h % 12
     return name[n] + str(octave)
     
-    
+def split(wav, tempo):
+    wav_seg = pydub.AudioSegment.from_file(wav, "wav")
+    chunk_length = (60 / tempo) * 1000
+    chunks = pydub.utils.make_chunks(wav_seg, chunk_length)
+    for i, chunk in enumerate(chunks):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        chunk_name = "/temp/chunk%s.wav" % i
+        full_chunk_path = dir_path + chunk_name
+        os.makedirs(os.path.dirname(full_chunk_path), exist_ok=True)
+        with open(full_chunk_path, "wb") as f:
+            chunk.export(f, format = "wav")
+    return len(chunks)
+
+
+if __name__ == "__main__":
+    num_of_chunks = split("test.wav")
+    wavs = []
+    for i in range(num_of_chunks):
+        wavs.append("/temp/chunk%s.wav" % i)
+    # wavs = ["/temp/chunk%s.wav" % i for i in range(num_of_chunks)]
+    freqs = analyse_wavs(wavs)
+
 
 
