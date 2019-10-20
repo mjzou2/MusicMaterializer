@@ -11,6 +11,7 @@ def frequencyToNote(frequencies):
         else:
             tempList[i] = freq2midi(frequencies[i])
     
+    
     print(tempList)
     return tempList
 
@@ -29,7 +30,7 @@ class ConvertToMidi:
         
         for i in range(len(self.noteName)):
             for j in range (len(self.noteName[i])):
-               self.noteName[i][j] = round(self.noteName[i][j])
+                self.noteName[i][j] = round(self.noteName[i][j])
         
         self.bpm = tempo
       
@@ -55,19 +56,19 @@ class ConvertToMidi:
                 rest += 1
 
             for j in range(len(self.noteName[i])):
-                print(rest)
-                on = midi.NoteOnEvent(tick = 0 + (rest * self.resolution), velocity = self.constVelocity, pitch = self.noteName[i][j] - 12)
-                track.append(on)
+                if self.noteName[i][j] >= 0 and self.noteName[i][j] < 128:
+                    on = midi.NoteOnEvent(tick = 0 + (rest * self.resolution), velocity = self.constVelocity, pitch = self.noteName[i][j] - 12)
+                    track.append(on)
+                    rest = 0
 
             for k in range(len(self.noteName[i])):
-                rest = 0
-                print('Note off')
-                if k == 0:
-                    off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k] - 12)
-                else:
-                    off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k] - 12)
+                if self.noteName[i][j] >= 0 and self.noteName[i][j] < 128:
+                    if k == 0:
+                        off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k] - 12)
+                    else:
+                        off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k] - 12)
 
-                track.append(off)
+                    track.append(off)
 
         # create eot
         print("creating eot...")
@@ -83,15 +84,18 @@ class ConvertToMidi:
 
         print ("Conversion finished")
 
-'''
+
 print ("running test")
 
 
-notes = [[31, 57], [69], [48, 38]]
+#notes = [[31, 57], [69], [48, 38]]
 
-print(frequencyToNote([[440,220],[329.628,493.883]]))
-'''
-test = ConvertToMidi([[392.0],[440.0],[494.6666666],[522.6666666666666666666666], None, [440.0]], 90)
+#print(frequencyToNote([[440,220],[329.628,493.883]]))
+
+test = ConvertToMidi([[392.0,1.3333333333333],[440.0,1.333333333],[494.6666666,1.3333333333333],[522.6666666666666666666666,1.333333333], None, None, [440.0], None, None], 90)
 test.toMidi()
 
 print("Test finished")
+'''
+print(frequencyToNote([[1.4444],[440],[494.66666],[522.6666666666, 1.33333333]]))
+'''
