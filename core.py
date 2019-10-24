@@ -8,7 +8,7 @@ import errno
 import subprocess
 import math
 import numpy as np
-from helper_functions import convert_to_midi
+from helper_functions import convert_to_midi, export
 
 def get_arguments():
     desc = "Converts sound to sheet music"
@@ -110,7 +110,8 @@ if __name__ == "__main__":
     freqs = analyse_wavs(wavs)
     converter = convert_to_midi.ConvertToMidi(freqs, bpm, output)
     converter.toMidi()
-    subprocess.run(["bash", "midi-to-pdf.sh", output])
+    # export.export_to_midi(output)
+    export.export_to_flat("test", output)
 
 
 
