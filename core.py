@@ -110,8 +110,8 @@ if __name__ == "__main__":
     freqs = analyse_wavs(wavs)
     converter = convert_to_midi.ConvertToMidi(freqs, bpm, output)
     converter.toMidi()
-    # export.export_to_midi(output)
-    export.export_to_flat("test", output)
+    #export.export_to_pdf(output + '.mid')
+    export.export_to_flat(output, output + '.mid')
 
 
 
