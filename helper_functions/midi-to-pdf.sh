@@ -5,3 +5,4 @@ echo "converting music.ly to pdf..."
 lilypond music.ly
 echo "Done."
 rm music.ly
+rm music.midi	
