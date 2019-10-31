@@ -154,7 +154,8 @@ def get_bpm(wav):
     bpm = numpy.median(bpms)
     # print('Completed.  Estimated Beats Per Minute:', bpm)
     return bpm
-'''if __name__ == '__main__':
+'''
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process .wav file to determine the Beats Per Minute.')
     parser.add_argument('--filename', required=True,
                    help='.wav file for processing')
@@ -200,4 +201,5 @@ def get_bpm(wav):
     plt.plot(n,abs(correl)); 
     plt.show(False); #plot non-blocking
     time.sleep(10);
-    plt.close();'''
+    plt.close();
+'''
