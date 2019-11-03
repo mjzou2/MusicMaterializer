@@ -53,8 +53,13 @@ def loudest_freqs(wav_file):
     louds = []
     for i in range(1, samples//2):
         if abs_fft[i] > min_amp:
+            if freqs[i] < 27.5:
+                continue
             p = pitch(freqs[i])
             if p not in pitches_recorded:
+                if len(louds) != 0:
+                    if math.ceil(math.log2(round(freqs[i] / louds[0]))) == math.floor(math.log2(round(freqs[i] / louds[0]))):
+                        continue
                 pitches_recorded.append(p)
                 louds.append(freqs[i])
     if not louds:

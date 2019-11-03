@@ -32,7 +32,8 @@ class ConvertToMidi:
     # constructor
     def __init__(self, notes, tempo,exports):
         print("constructing...")
-        
+        print(notes)
+
         self.noteName = frequencyToNote(notes)
         self.export = exports
 
