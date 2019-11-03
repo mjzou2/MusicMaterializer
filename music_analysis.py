@@ -2,6 +2,7 @@ from scipy.io import wavfile
 from scipy.fftpack import fft,fftfreq
 import numpy as np
 from math import log2, pow
+import librosa
 
 def loudest_freqs(wav_file):
     min_amp = 100000000 #i have no idea what this should be set to
@@ -37,3 +38,12 @@ def pitch(freq):
     n = h % 12
     return name[n] + str(octave)
 
+# audio wav onset detection
+# https://musicinformationretrieval.com/onset_detection.html
+def audio_onset(wav_file):
+    x, sr = librosa.load(wav_file)
+    onset_frames = librosa.onset.onset_detect(x, sr=sr, wait=1, pre_avg=1, post_avg=1,
+            pre_max=1, post_max=1)
+    onset_times = librosa.frames_to_time(onset_frames)
+    onset_milliseconds = [i * 1000 for i in onset_times]
+    return onset_milliseconds[0]
