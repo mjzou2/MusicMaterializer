@@ -1,10 +1,11 @@
 import midi
 from audiolazy import freq2midi, freq2str, str2freq
 
+
 # convert frequencies into Midi numbers
 def frequencyToNote(frequencies):
     tempList = frequencies.copy()
-	
+
     for i in range(len(frequencies)):
         if frequencies[i] == None:
             tempList[i] = []
@@ -17,9 +18,10 @@ def frequencyToNote(frequencies):
                     tempList[i].remove(tempList[i][j])
                     j = 0
                     k += 1
-                j += 1 
+                j += 1
     print(tempList)
     return tempList
+
 
 # convert the list of Midi numbers into a functional midi file
 class ConvertToMidi:
@@ -30,7 +32,7 @@ class ConvertToMidi:
     export = ''
 
     # constructor
-    def __init__(self, notes, tempo,exports):
+    def __init__(self, notes, tempo, exports):
         print("constructing...")
         print(notes)
 
@@ -38,11 +40,11 @@ class ConvertToMidi:
         self.export = exports
 
         for i in range(len(self.noteName)):
-            for j in range (len(self.noteName[i])):
+            for j in range(len(self.noteName[i])):
                 self.noteName[i][j] = round(self.noteName[i][j])
-        
+
         self.bpm = tempo
-      
+
     # convert notes and output the midi file
     def toMidi(self):
         print("called toMidi")
@@ -51,45 +53,47 @@ class ConvertToMidi:
         pattern = midi.Pattern()
         track = midi.Track()
         pattern.append(track)
-        
+
         # append note events to the track
         print("start appending note events")
         tempo = midi.SetTempoEvent()
         tempo.set_bpm(self.bpm)
         track.append(tempo)
-        
+
         rest = 0
         for i in range(len(self.noteName)):
-            
+
             if self.noteName[i] == []:
                 rest += 1
 
             for j in range(len(self.noteName[i])):
-                on = midi.NoteOnEvent(tick = 0 + (rest * self.resolution), velocity = self.constVelocity, pitch = self.noteName[i][j])
+                on = midi.NoteOnEvent(tick=0 + (rest * self.resolution), velocity=self.constVelocity,
+                                      pitch=self.noteName[i][j])
                 track.append(on)
                 rest = 0
 
             for k in range(len(self.noteName[i])):
                 if k == 0:
-                    off = midi.NoteOffEvent(tick = self.resolution, pitch = self.noteName[i][k])
+                    off = midi.NoteOffEvent(tick=self.resolution, pitch=self.noteName[i][k])
                 else:
-                    off = midi.NoteOffEvent(tick = 0, pitch = self.noteName[i][k])
+                    off = midi.NoteOffEvent(tick=0, pitch=self.noteName[i][k])
 
                 track.append(off)
 
         # create eot
         print("creating eot...")
-        eot = midi.EndOfTrackEvent(tick = 1)
+        eot = midi.EndOfTrackEvent(tick=1)
         track.append(eot)
 
-        print ("This is the pattern")
-        print (pattern)
-        
+        print("This is the pattern")
+        print(pattern)
+
         # save the pattern to ./output.mid
-        print ("Saving ...")
+        print("Saving ...")
         midi.write_midifile(self.export + '.mid', pattern)
 
-        print ("Conversion finished")
+        print("Conversion finished")
+
 
 '''
 print ("running test")
