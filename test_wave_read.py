@@ -49,14 +49,18 @@ def spectrum(wav_file):
     amplitude = fft(samples)
     amplitude = amplitude[: (sample_count // 2 - 1)]
     frequencies = fftfreq(sample_count, 1 / rate)[: sample_count//2 - 1]
-    print(frequencies)
+    print(amplitude.tolist())
+
     print("Amplitude ", len(amplitude), " Frq ", len(frequencies))
+    sqmag = [(abs(e) ** 2) for e in amplitude]
     sqamp = [(e ** 2) for e in amplitude]
 
-    fig, axs = plt.subplots(2)
-    fig.suptitle("Og Vs. sq")
-    axs[0].plot(amplitude, frequencies)
-    axs[1].plot(sqamp, frequencies)
+    fig, axs = plt.subplots(4)
+    fig.suptitle("Og Vs. abs(mag) Vs. sq Vs. sqmag")
+    axs[0].plot(frequencies, amplitude)
+    axs[1].plot(frequencies, abs(amplitude))
+    axs[2].plot(frequencies, sqamp)
+    axs[3].plot(frequencies, sqmag)
     plt.show()
 
 
