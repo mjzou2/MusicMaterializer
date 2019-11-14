@@ -4,7 +4,7 @@ import os
 
 def split(wav, tempo):
     wav_seg = pydub.AudioSegment.from_file(wav, "wav")
-    chunk_length = (60 / (tempo * 8)) * 1000
+    chunk_length = (60 / (tempo * 4)) * 1000
     chunks = pydub.utils.make_chunks(wav_seg, chunk_length)
     filename = []
     for i, chunk in enumerate(chunks):

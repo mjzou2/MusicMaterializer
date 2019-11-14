@@ -47,7 +47,7 @@ def spectrum(wav_file):
     samples = [(ele / 2**16) for ele in samples]
     sample_count = len(samples)
     amplitude = fft(samples)
-    amplitude = abs(amplitude[: (sample_count // 2 - 1)])
+    amplitude = amplitude[: (sample_count // 2 - 1)]
     frequencies = fftfreq(sample_count, 1 / rate)[: sample_count//2 - 1]
     print(frequencies)
     print("Amplitude ", len(amplitude), " Frq ", len(frequencies))
