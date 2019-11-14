@@ -7,6 +7,6 @@ def detect_onset(wav):
     min_amp = 10000 #seems okay?
     for i, sample in enumerate(data):
         if abs(sample) > min_amp:
-            return i // (rate / 1000)
+            return i / rate
     return -1
 

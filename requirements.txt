@@ -1,3 +1,4 @@
+matplotlib
 audiolazy==0.6
 certifi==2019.9.11
 flat-api==0.7.0
