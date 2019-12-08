@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Music Materializer File Download</h1>
+
+    <h2>Files</h2>
+    
+    <p>
+	<a href="{% url 'upload' %}" class="btn btn-primary">Upload File</a>
+    </p>
+
+    <table class="table">
+	<thead>
+            <tr>
+                <th>Title</th>
+		<th>Download</th>
+		<th>API Key</th>
+		<th>Detected BPM</th>
+		<th>Recorded Audio</th>
+            </tr>
+        </thead>
+	<tbody>
+	    {% for item in files %}
+	        <tr>
+		    <td>
+			{{ item.title }}</td>
+		    <td>
+		        <a href="{{ item.file.url }}" class="btn btn-primary btn-sm" target="_blank">Download File</a>
+		    </td>
+		    <td>
+		        {{ item.apikey }}
+		    </td>
+		    <td>
+			{{ item.detect_bpm }}
+		    </td>
+		    <td>
+			{{ item.record }}
+		    </td>
+		    <td>
+			    <form method="post" action="{% url 'delete_file' item.pk %}">
+			    	{% csrf_token %}
+				<button type="submit" class="btn btn-danger btn-sm">Delete</button>
+			    </form>
+		    </td>
+		</tr>
+	    {% endfor %}
+	</tbody>
+    </table>
+{% endblock %}

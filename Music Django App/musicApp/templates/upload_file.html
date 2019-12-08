@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<h1>Music Materializer File Upload</h1>
+
+	<h2>Upload File</h2>
+	
+	<form method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<a href="{% url 'help' %}" class="btn btn-primary">Help</a>
+		<button type="submit" class="btn btn-primary">Upload File</button>
+	</form>
+
+{% endblock %}
