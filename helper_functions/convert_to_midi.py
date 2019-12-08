@@ -42,7 +42,7 @@ class ConvertToMidi:
         self.export = exports
 
         self.onsets = [ele * self.resolution * tempo / 60 for ele in onsets]
-
+        self.onsets = [self.onsets[i] - self.onsets[i - 1] for i in range(1, len(onsets))]
         for i in range(len(self.noteName)):
             for j in range(len(self.noteName[i])):
                 self.noteName[i][j] = round(self.noteName[i][j])
@@ -67,23 +67,33 @@ class ConvertToMidi:
 
         rest = 0
         cont = 1
+        onset_index = 0
         for i in range(len(self.noteName)):
-
             if self.noteName[i] == []:
                 rest += 1
             else:
-                on = midi.NoteOnEvent(tick=0 + (rest * 55), velocity=self.constVelocity,
+                progression = 0 + (rest * 55)
+                on = midi.NoteOnEvent(tick=progression, velocity=self.constVelocity,
                                       pitch=self.noteName[i][0])
                 track.append(on)
                 rest = 0
 
-                if i < len(self.noteName) and not self.noteName[i + 1] == [] and self.noteName[i][0] == self.noteName[i + 1][0]:
-                    cont += 1
-                    continue
+                try:
+                    if i < len(self.noteName) and not self.noteName[i + 1] == []\
+                            and self.noteName[i][0] == self.noteName[i + 1][0]\
+                            and not self.onsets[onset_index] - 10 <= cont * 55 <=\
+                            self.onsets[onset_index] + 10:
+                        cont += 1
+                        continue
+                except IndexError:
+                    if not self.noteName[i + 1]:
+                        break
 
-                off = midi.NoteOffEvent(tick=cont * 55, pitch=self.noteName[i][0])
+                progression = cont * 55
+                off = midi.NoteOffEvent(tick=progression, pitch=self.noteName[i][0])
                 track.append(off)
                 cont = 1
+                onset_index += 1
 
         # create eot
         print("creating eot...")
