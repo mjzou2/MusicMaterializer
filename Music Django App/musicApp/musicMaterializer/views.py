@@ -1,13 +1,10 @@
-# Create your views here.
-
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.core.files.storage import FileSystemStorage
+# from django.core.files.storage import FileSystemStorage
 from django.views.generic import TemplateView
 
 from .forms import FileForm
 from .models import FileModel
-
 
 def home(request):
     return render(request, 'home.html')
@@ -17,10 +14,17 @@ def upload(request):
     if request.method == 'POST':
         form = FileForm(request.POST, request.FILES, request.POST)
         if form.is_valid():
+            
+            form.save()            
+            
+            print(request.FILES)
+            for filename in request.FILES:
+                name = request.FILES[filename].name
+                print(name)
+                #print(request.FILES[filename].temporary_file_path)
 
-            formNew = convert(form)
-
-            formNew.save()
+                convert('/home/jlordo/music-materializer/Music Django App/musicApp/media/files/' + name) 
+            #open(str(request.FILES['file']), 'w') 
             return redirect('file_list')	
     else:
         form = FileForm()
@@ -50,7 +54,6 @@ def help(request):
 
 
 
-
 import wave, array, math, time, argparse, sys
 from scipy.io import wavfile
 from scipy.fftpack import fft, fftfreq
@@ -61,7 +64,7 @@ import errno
 import subprocess
 import math
 import numpy as np
-from helper_functions import convert_to_midi, export
+from helper_functions import convert_to_midi, export, bpm_detection
 
 
 def get_arguments():
@@ -86,14 +89,14 @@ def pitch(freq):
 
 def loudest_freqs(wav_file):
     """
-    Finds loudest frequencies given wav.
+    #Finds loudest frequencies given wav.
 
-    Parameters:
-        wav_file: a string contating the name of an accessible wav file
+    #Parameters:
+        #wav_file: a string contating the name of an accessible wav file
 
-    Returns:
-        None if no frequency above specified loudness (min_amp),
-        othwerise returns list of unique frequencies as floats.
+    #Returns:
+        #None if no frequency above specified loudness (min_amp),
+        #othwerise returns list of unique frequencies as floats.
     """
 
     min_amp = 10000000
@@ -122,18 +125,13 @@ def loudest_freqs(wav_file):
 
 
 def analyse_wavs(wavs):
-    """
-    Takes in list of names of wav files and returns 2D list of loudest_freqs output.
-    See documentation of loudest_freqs for more info.
-    """
+    #Takes in list of names of wav files and returns 2D list of loudest_freqs output.
+    #See documentation of loudest_freqs for more info.
     return [loudest_freqs(wav) for wav in wavs]
 
 
 def freq_to_str(freq):
-    """
-    Takes in numeric frequency and returns name of respective note.
-    Returns only sharp equivalent of non-natural notes.
-    """
+    # Takes in numeric frequency and returns name of respective note.  Returns only sharp equivalent of non-natural notes.
     A4 = 440
     C0 = 440*math.pow(2, -4.75)
     name = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
@@ -161,15 +159,16 @@ def split(wav, tempo):
 
 def convert(inputFile):    
     #args = get_arguments()
-    bpm = inputFile.apikey # find a way to have user input bpm
-    input = inputFile.file
-    output = FileForm(inputFile.title, inputFile.file + '.mid', inputFile.apikey, inputFile.detect_bpm, inputFile.record) 
-    num_of_chunks, wavs = split(input, bpm)
+    bpm = 120 # bpm_detection.get_bpm(inputFile)
+    #input = inputFile.cleaned_data.get('file') # find a way to have user input bpm
+    #outputFileForm = FileForm(inputFile.cleaned_data['file'], inputFile.cleaned_data['title'], inputFile.cleaned_data['apikey'])
+    #output = str(inputFile.cleaned_data.get('file'))
+    num_of_chunks, wavs = split(inputFile, bpm)
+    output = inputFile
     # wavs = ["/temp/chunk%s.wav" % i for i in range(num_of_chunks)]
     freqs = analyse_wavs(wavs)
     converter = convert_to_midi.ConvertToMidi(freqs, bpm, output)
     converter.toMidi()
-    export.export_to_pdf(output + '.mid')
-    return output
-    #export.export_to_flat(output, output + '.mid')
+    # export.export_to_pdf(output + '.mid') #this used to be too
+    export.export_to_flat(output, output + '.mid')
 

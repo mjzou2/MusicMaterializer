@@ -17,7 +17,6 @@
 		<th>Download</th>
 		<th>API Key</th>
 		<th>Detected BPM</th>
-		<th>Recorded Audio</th>
             </tr>
         </thead>
 	<tbody>
@@ -26,16 +25,15 @@
 		    <td>
 			{{ item.title }}</td>
 		    <td>
-		        <a href="{{ item.file.url }}" class="btn btn-primary btn-sm" target="_blank">Download File</a>
+			{% if item.file %}    
+		        	<a href="{{ item.file.url }}" class="btn btn-primary btn-sm" target="_blank">Download File</a>
+				{% endif %}
 		    </td>
 		    <td>
 		        {{ item.apikey }}
 		    </td>
 		    <td>
 			{{ item.detect_bpm }}
-		    </td>
-		    <td>
-			{{ item.record }}
 		    </td>
 		    <td>
 			    <form method="post" action="{% url 'delete_file' item.pk %}">
