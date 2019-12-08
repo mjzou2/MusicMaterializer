@@ -16,7 +16,7 @@ def loudest_freqs(wav_file):
     pitches_recorded = []
     louds = []
     for i in range(1, samples//2): #start at index 1 because heck 0 freq
-        if abs_fft[i] > min_amp:
+        if abs_fft[i] == max(abs_fft):
             p = pitch(freqs[i])
             if p not in pitches_recorded:
                 pitches_recorded.append(p)
@@ -46,4 +46,5 @@ def audio_onset(wav_file):
             pre_max=1, post_max=1)
     onset_times = librosa.frames_to_time(onset_frames)
     onset_milliseconds = [i * 1000 for i in onset_times]
-    return onset_milliseconds[0]
+    print(onset_times)
+    return onset_milliseconds[0], onset_times

@@ -30,14 +30,18 @@ class ConvertToMidi:
     constVelocity = 30
     resolution = 220
     export = ''
+    onsets = []
 
     # constructor
-    def __init__(self, notes, tempo, exports):
+    def __init__(self, notes, tempo, exports, onsets):
         print("constructing...")
         print(notes)
+        print(onsets)
 
         self.noteName = frequencyToNote(notes)
         self.export = exports
+
+        self.onsets = [ele * self.resolution * tempo / 60 for ele in onsets]
 
         for i in range(len(self.noteName)):
             for j in range(len(self.noteName[i])):
@@ -48,6 +52,7 @@ class ConvertToMidi:
     # convert notes and output the midi file
     def toMidi(self):
         print("called toMidi")
+        print(self.onsets)
         print(self.noteName)
         # create midi pattern and track
         pattern = midi.Pattern()
@@ -61,24 +66,24 @@ class ConvertToMidi:
         track.append(tempo)
 
         rest = 0
+        cont = 1
         for i in range(len(self.noteName)):
 
             if self.noteName[i] == []:
                 rest += 1
-
-            for j in range(len(self.noteName[i])):
-                on = midi.NoteOnEvent(tick=0 + (rest * self.resolution), velocity=self.constVelocity,
-                                      pitch=self.noteName[i][j])
+            else:
+                on = midi.NoteOnEvent(tick=0 + (rest * 55), velocity=self.constVelocity,
+                                      pitch=self.noteName[i][0])
                 track.append(on)
                 rest = 0
 
-            for k in range(len(self.noteName[i])):
-                if k == 0:
-                    off = midi.NoteOffEvent(tick=self.resolution, pitch=self.noteName[i][k])
-                else:
-                    off = midi.NoteOffEvent(tick=0, pitch=self.noteName[i][k])
+                if i < len(self.noteName) and not self.noteName[i + 1] == [] and self.noteName[i][0] == self.noteName[i + 1][0]:
+                    cont += 1
+                    continue
 
+                off = midi.NoteOffEvent(tick=cont * 55, pitch=self.noteName[i][0])
                 track.append(off)
+                cont = 1
 
         # create eot
         print("creating eot...")

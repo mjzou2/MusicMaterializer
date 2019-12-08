@@ -8,6 +8,8 @@ import errno
 import subprocess
 import math
 import numpy as np
+from finer_split import split as finer_split
+from music_analysis import audio_onset
 from helper_functions import convert_to_midi, export
 
 def get_arguments():
@@ -47,21 +49,37 @@ def loudest_freqs(wav_file):
     samples = len(data)
     if data.ndim > 1:
         data = [max(data[i]) for i in range(samples)]
-    abs_fft = np.abs(fft(data)[:samples//2])
-    freqs = fftfreq(samples, 1/samplerate)[:samples//2]
+    data = [(ele / 2**16) for ele in data]
+    abs_fft = np.abs(fft(data)[:samples//2 - 1])
+    freqs = fftfreq(samples, 1/samplerate)[:samples//2 - 1]
+    abs_fft = [(abs(e) ** 2) for e in abs_fft]
     pitches_recorded = []
     louds = []
-    for i in range(1, samples//2):
-        if abs_fft[i] > min_amp:
-            if freqs[i] < 27.5:
-                continue
-            p = pitch(freqs[i])
-            if p not in pitches_recorded:
-                if len(louds) != 0:
-                    if math.ceil(math.log2(round(freqs[i] / louds[0]))) == math.floor(math.log2(round(freqs[i] / louds[0]))):
-                        continue
-                pitches_recorded.append(p)
-                louds.append(freqs[i])
+    loudest = max(abs_fft)
+    print(loudest)
+    i = abs_fft.index(loudest)
+
+    if i == 0:
+        loudest = max(abs_fft[1:])
+        i = abs_fft.index(loudest)
+    print(i)
+    if 100 < loudest and not freqs[i] < 27.5:
+        p = pitch(freqs[i])
+        louds.append(freqs[i])
+    # for i in range(1, samples//2):
+    #     if 10 < loudest and loudest * 0.95 <= abs_fft[i] <= loudest * 1.05:
+    #         print(i)
+    #         if freqs[i] < 27.5:
+    #             continue
+    #         p = pitch(freqs[i])
+    #         louds.append(freqs[i])
+
+            # if p not in pitches_recorded:
+            #     if len(louds) != 0:
+            #         if math.ceil(math.log2(round(freqs[i] / louds[0]))) == math.floor(math.log2(round(freqs[i] / louds[0]))):
+            #             continue
+            #     pitches_recorded.append(p)
+            #     louds.append(freqs[i])
     if not louds:
         return None
     return louds
@@ -110,10 +128,11 @@ if __name__ == "__main__":
     bpm = args.bpm
     input = args.wav_file
     output = args.export
-    num_of_chunks, wavs = split(input, bpm)
+    wavs = finer_split(input, bpm)
     # wavs = ["/temp/chunk%s.wav" % i for i in range(num_of_chunks)]
     freqs = analyse_wavs(wavs)
-    converter = convert_to_midi.ConvertToMidi(freqs, bpm, output)
+    start_time, onsets = audio_onset(input)
+    converter = convert_to_midi.ConvertToMidi(freqs, bpm, output, onsets)
     converter.toMidi()
     #export.export_to_pdf(output + '.mid')
     export.export_to_flat(output, output + '.mid')
