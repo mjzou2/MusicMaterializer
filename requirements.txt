@@ -1,3 +1,4 @@
+matplotlib
 audiolazy==0.6
 certifi==2019.9.11
 flat-api==0.7.0
@@ -7,4 +8,5 @@ python-dateutil==2.8.0
 scipy==1.3.1
 six==1.12.0
 urllib3==1.25.6
--e git://github.com/vishnubob/python-midi@feature/python3#egg=python-midi
+librosa==0.7.1
+-e git://github.com/louisabraham/python3-midi#egg=python-midi
