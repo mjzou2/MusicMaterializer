@@ -81,16 +81,15 @@ class ConvertToMidi:
                 try:
                     if i < len(self.noteName) and not self.noteName[i + 1] == []\
                             and self.noteName[i][0] == self.noteName[i + 1][0]\
-                            and not self.onsets[onset_index] - 10 <= cont * 55 <=\
-                            self.onsets[onset_index] + 10:
+                            and not self.onsets[onset_index] - 25 <= cont * 55 <=\
+                            self.onsets[onset_index] + 25:
                         cont += 1
                         continue
                 except IndexError:
                     if not self.noteName[i + 1]:
                         break
 
-                progression = cont * 55
-                off = midi.NoteOffEvent(tick=progression, pitch=self.noteName[i][0])
+                off = midi.NoteOffEvent(tick=cont * 55, pitch=self.noteName[i][0])
                 track.append(off)
                 cont = 1
                 onset_index += 1

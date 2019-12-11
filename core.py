@@ -63,7 +63,7 @@ def loudest_freqs(wav_file):
         loudest = max(abs_fft[1:])
         i = abs_fft.index(loudest)
     print(i)
-    if 500 < loudest and not freqs[i] < 27.5:
+    if 10 < loudest and not freqs[i] < 27.5:
         p = pitch(freqs[i])
         louds.append(freqs[i])
     # for i in range(1, samples//2):

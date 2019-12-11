@@ -38,7 +38,7 @@ def trim_wav(original, onset_time):
         print(rate, len(samples))
         wavfile.write("trimmed.wav", rate, samples)
     print(len(samples) / rate)
-    samples = samples[math.floor(onset_time * rate):]
+    samples = samples[:math.floor(onset_time * rate)]
     wavfile.write("trimmed.wav", rate, samples)
 
 
