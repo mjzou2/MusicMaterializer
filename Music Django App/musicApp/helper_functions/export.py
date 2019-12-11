@@ -32,11 +32,13 @@ flat_api_client = flat_api.ApiClient(configuration)
 api_instance = flat_api.AccountApi(flat_api_client)
 
 
-def export_to_flat(name, file):
+def export_to_flat(name, file, apikey):
     try:
         # Get current user profile
         # api_response = api_instance.get_authenticated_user()
         # pprint(api_response)
+
+        configuration.access_token = apikey
 
         f = open(file, 'rb')
         contents = base64.b64encode(f.read()).decode('ascii')

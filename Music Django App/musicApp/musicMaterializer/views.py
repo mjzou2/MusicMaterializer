@@ -12,7 +12,7 @@ def home(request):
 
 def upload(request):
     if request.method == 'POST':
-        form = FileForm(request.POST, request.FILES, request.POST)
+        form = FileForm(request.POST, request.FILES)
         if form.is_valid():
             
             form.save()            
@@ -20,11 +20,8 @@ def upload(request):
             print(request.FILES)
             for filename in request.FILES:
                 name = request.FILES[filename].name
-                print(name)
-                #print(request.FILES[filename].temporary_file_path)
+                convert('/home/jlordo/music-materializer/Music Django App/musicApp/media/files/' + name, form.cleaned_data.get('title'), form.cleaned_data.get('apikey')) 
 
-                convert('/home/jlordo/music-materializer/Music Django App/musicApp/media/files/' + name, form.cleaned_data.get('title')) 
-            #open(str(request.FILES['file']), 'w') 
             return redirect('file_list')	
     else:
         form = FileForm()
@@ -157,18 +154,16 @@ def split(wav, tempo):
     return len(chunks), filenames
 
 
-def convert(inputFile, name):    
-    #args = get_arguments()
-    bpm = 120 # bpm_detection.get_bpm(inputFile)
-    #input = inputFile.cleaned_data.get('file') # find a way to have user input bpm
-    #outputFileForm = FileForm(inputFile.cleaned_data['file'], inputFile.cleaned_data['title'], inputFile.cleaned_data['apikey'])
-    #output = str(inputFile.cleaned_data.get('file'))
+def convert(inputFile, name, apikey):    
+    bpm = bpm_detection.get_bpm(inputFile)
+    
     num_of_chunks, wavs = split(inputFile, bpm)
     output = inputFile
-    # wavs = ["/temp/chunk%s.wav" % i for i in range(num_of_chunks)]
     freqs = analyse_wavs(wavs)
+    
     converter = convert_to_midi.ConvertToMidi(freqs, bpm, output)
     converter.toMidi()
+    
     # export.export_to_pdf(output + '.mid') #this used to be too
-    export.export_to_flat(name, output + '.mid')
+    export.export_to_flat(name, output + '.mid', apikey)
 

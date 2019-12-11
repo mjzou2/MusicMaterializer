@@ -136,7 +136,6 @@ def get_bpm(wav):
     for window_ndx in range(0,max_window_ndx):
 
         #get a new set of samples
-        #print n,":",len(bpms),":",max_window_ndx,":",fs,":",nsamps,":",samps_ndx
         data = samps[samps_ndx:samps_ndx+window_samps]
         if not ((len(data) % window_samps) == 0):
             raise AssertionError( str(len(data) ) ) 
@@ -144,6 +143,7 @@ def get_bpm(wav):
         bpm, correl_temp = bpm_detector(data,fs)
         if bpm == None:
             continue
+        print(bpm)
         bpms[window_ndx] = bpm
         correl = correl_temp
         
@@ -152,7 +152,7 @@ def get_bpm(wav):
         n=n+1; #counter for debug...
 
     bpm = numpy.median(bpms)
-    # print('Completed.  Estimated Beats Per Minute:', bpm)
+    print('Completed.  Estimated Beats Per Minute:', bpm)
     return bpm
 '''
 if __name__ == '__main__':
