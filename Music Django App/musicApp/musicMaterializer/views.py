@@ -23,7 +23,7 @@ def upload(request):
                 print(name)
                 #print(request.FILES[filename].temporary_file_path)
 
-                convert('/home/jlordo/music-materializer/Music Django App/musicApp/media/files/' + name) 
+                convert('/home/jlordo/music-materializer/Music Django App/musicApp/media/files/' + name, form.cleaned_data.get('title')) 
             #open(str(request.FILES['file']), 'w') 
             return redirect('file_list')	
     else:
@@ -157,7 +157,7 @@ def split(wav, tempo):
     return len(chunks), filenames
 
 
-def convert(inputFile):    
+def convert(inputFile, name):    
     #args = get_arguments()
     bpm = 120 # bpm_detection.get_bpm(inputFile)
     #input = inputFile.cleaned_data.get('file') # find a way to have user input bpm
@@ -170,5 +170,5 @@ def convert(inputFile):
     converter = convert_to_midi.ConvertToMidi(freqs, bpm, output)
     converter.toMidi()
     # export.export_to_pdf(output + '.mid') #this used to be too
-    export.export_to_flat(output, output + '.mid')
+    export.export_to_flat(name, output + '.mid')
 
