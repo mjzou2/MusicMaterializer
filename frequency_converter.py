@@ -1,35 +1,36 @@
 # Andrew Tian
 
-# create a function that receives a frequency and possibly tick value that returns
-# a note in a MIDI track with an EndOfTrackEvent
+# create ranges for frequencies to output a String result of the note
+# for example: 120Hz-150Hz outputs G3
+# use lazy_midi module that converts given frequencies to return MIDI pitch number
 
-# pseudocode
-# function frequencyToNote(freqValue, tickValue, possibly loudness value too) 
-# create temporary track
-# create NoteOnEvent and NoteOffEvent(with default loudness if not specified)
-# add both to temporary track
-# add an EndOfTrackEvent to the temp track
-# return the track
+from audiolazy import freq2midi, freq2str, str2freq
 
-# notes
-# NoteOnEvent - captures beginning of a note, tick is when event occurs, pitch is 
-# frequency, velocity is how hard the key was pressed
-# NoteOffEvent - captures end of a note, pitch is the note released(most likely same 
-# value as NoteOnEvent), velocity is zero
-# EndOfTrackEvent - special event that indicates to MIDI the end of a track, has tick 
-# value of 1
+"""
+test = freq2midi(120)
+print(test)
 
-import mido
+test2 = freq2str(120)
+print(test2)
 
-def frequencyToNote(tickValue, loudnessValue, freqValue) :
-	print("this function is run")
-	track = midi.Track()
-	on = midi.NoteOnEvent(0, loudnessValue, freqValue)
-	off = midi.NoteOffEvent(tickValue, 0, freqValue)
-	end = midi.EndOfTrackEvent()
-	track.append(on)
-	track.append(off)
-	track.append(end)
+print(str2freq("F#2"))
 
+print(freq2str(str2freq("F#2")))
+"""
 
-frequencyToNote(120, 10, 10)
+def frequencyToNote(frequencies):
+	tempList = frequencies.copy()
+	
+	for i in range(len(frequencies)):
+		tempList[i] = freq2str(frequencies[i])
+	
+	print(tempList)
+
+def main():
+	print("main run")
+
+testList = [[120, 250, 40], [60, 100], [60, 230, 130]]
+frequencyToNote(testList)
+
+if __name__ == "__main__":
+        main()
